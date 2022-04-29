@@ -40,4 +40,49 @@ def home():
 def api_all():
     return jsonify(books)
 
+
+@app.route('/api/v1/resources/books', methods=['GET'])
+def api_id():
+    # Check if an ID was provided as part of the URL.
+    # If ID is provided, assign it to a variable.
+    # If no ID is provided, display an error in the browser.
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return "Error: No id field provided. Please specify an id."
+
+    # Create an empty list for our results
+    results = []
+
+    # Loop through the data and match results that fit the requested ID.
+    # Ids are unique, but other fields might return many results
+    for book in books:
+        if book['id'] == id:
+            results.append(book)
+
+
+    # Use the jsonify function from Flask to convert our list of
+    # Python dictionaries to the JSON format.
+    return jsonify(results)
+
+
+@app.route('/api/v1/resources/books', methods=['GET'])
+def api_title():
+    # Custom function to check if the given title is in the database
+    # Doesn't work as for now, I guess I'll have to regroup all the
+    # filtering features in one big or to somehow dispatch the requests
+    # because of the @app.route which can't be used twice IMO
+    if 'title' in request.args:
+        title = str(request.args['title'])
+    else:
+        return "Error title"
+
+    results = []
+
+    for book in books:
+        if book['title'] == title:
+            results.append(book)
+
+    return jsonify(results)
+
 app.run()
